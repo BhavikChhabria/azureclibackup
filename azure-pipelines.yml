@@ -19,8 +19,7 @@ parameters:
 jobs:
 - job: CopyDatabase
   displayName: 'Copy Database from Source to Target'
-  pool:
-    vmImage: 'ubuntu-latest'
+  pool: azrelease
   steps:
   - task: AzureCLI@2
     displayName: 'Azure Login'
