@@ -8,23 +8,15 @@ trigger:
     include:
       - main
 
-parameters:
-  - name: sourceDB
-    type: string
-    default: 'sourceDB'
-  - name: targetDB
-    type: string
-    default: 'targetDB'
-
 jobs:
 - job: CopyDatabase
   displayName: 'Copy Database from Source to Target'
-  pool: azrelease
+  pool:
+    vmImage: 'ubuntu-latest'
   steps:
   - task: AzureCLI@2
     displayName: 'Azure Login'
     inputs:
-      #azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -32,8 +24,7 @@ jobs:
 
   - task: AzureCLI@2
     inputs:
-      #azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az postgres server copy --source-db $(sourceDB) --target-db $(targetDB)
+        az postgres server copy --source-db sourceDB --target-db targetDB
