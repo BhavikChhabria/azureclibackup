@@ -4,58 +4,37 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: sourceDB
+    type: string
+    default: 'sourceDB'
+  - name: targetDB
+    type: string
+    default: 'targetDB'
 
 jobs:
-- job: ProvisionAndCopyDatabase
-  displayName: 'Provision and Copy Database'
-  pool: azrelease
-
+- job: CopyDatabase
+  displayName: 'Copy Database from Source to Target'
+  pool:
+    vmImage: 'ubuntu-latest'
   steps:
   - task: AzureCLI@2
-    displayName: 'Create Source PostgreSQL Instance'
+    displayName: 'Azure Login'
     inputs:
-      azureSubscription: '664b6097-19f2-42a3-be95-a4a6b4069f6b'
+      #azureSubscription: 'YourAzureSubscription'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az postgres server create \
-          --resource-group sa1_test_eic_BhavikChhabria \
-          --name sourcedb \
-          --location southeastasia \
-          --admin-user source2 \
-          --admin-password 12_BHavik \
-          --sku-name GP_Gen5_2
+        az login
 
-  # - task: AzureCLI@2
-  #   displayName: 'Create Target PostgreSQL Instance'
-  #   inputs:
-  #     azureSubscription: '664b6097-19f2-42a3-be95-a4a6b4069f6b'
-  #     scriptType: 'bash'
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az postgres server create \
-  #         --resource-group sa1_test_eic_BhavikChhabria \
-  #         --name targetdb \
-  #         --location southeastasia \
-  #         --admin-user source3 \
-  #         --admin-password 12_BHavik \
-  #         --sku-name GP_Gen5_2
-
-  # - task: AzureCLI@2
-  #   displayName: 'Backup Source Database'
-  #   inputs:
-  #     azureSubscription: '664b6097-19f2-42a3-be95-a4a6b4069f6b'
-  #     scriptType: 'bash'
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       pg_dump -h dbsource.postgres.database.azure.com -U source2 -d postgres -Fc -f source_backup1.dump
-
-  # - task: AzureCLI@2
-  #   displayName: 'Restore Backup to Target Database'
-  #   inputs:
-  #     azureSubscription: '664b6097-19f2-42a3-be95-a4a6b4069f6b'
-  #     scriptType: 'bash'
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       pg_restore -h targets1.postgres.database.azure.com -U source3 -d postgres -Fc source_backup1.dump
+  - task: AzureCLI@2
+    inputs:
+      #azureSubscription: 'YourAzureSubscription'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az postgres server copy --source-db $(sourceDB) --target-db $(targetDB)
