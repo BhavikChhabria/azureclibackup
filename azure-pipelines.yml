@@ -24,7 +24,7 @@ jobs:
   - task: AzureCLI@2
     displayName: 'Azure Login'
     inputs:
-      azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
+      #azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -32,7 +32,7 @@ jobs:
 
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
+      #azureSubscription: '/subscriptions/664b6097-19f2-42a3-be95-a4a6b4069f6b/resourceGroups/sa1_test_eic_BhavikChhabria'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
