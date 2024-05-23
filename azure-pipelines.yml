@@ -28,4 +28,4 @@ jobs:
         pg_dump -h dbsource.postgres.database.azure.com -U source2 postgres > new_backup2.dump
         psql -h targets1.postgres.database.azure.com -U source3 -d postgres
         psql -h targets1.postgres.database.azure.com -U source3 -d postgres -f new_backup.dump
-      workingDirectory: '$(Build.SourceDirectory)'
+      workingDirectory: '.'
