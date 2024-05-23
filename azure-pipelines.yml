@@ -24,8 +24,7 @@ jobs:
       targetType: 'inline'
       script: |
         az login
-        az postgres flexible-server connect --name dbsource --admin-user source2 --admin-password 12_BHavik
-        pg_dump -h dbsource.postgres.database.azure.com -U source2 postgres > new_backup3.dump
-        psql -h targets1.postgres.database.azure.com -U source3 -d postgres
-        psql -h targets1.postgres.database.azure.com -U source3 -d postgres -f new-backup3.dump
-      workingDirectory: '.'
+        az postgres flexible-server connect --name dbsource --admin-user source2 --admin-password 12_BHavik --output none
+        pg_dump -h dbsource.postgres.database.azure.com -U source2 postgres > $(System.DefaultWorkingDirectory)/new_backup3.dump
+        psql -h targets1.postgres.database.azure.com -U source3 -d postgres -f $(System.DefaultWorkingDirectory)/new_backup3.dump
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
