@@ -4,34 +4,28 @@
 # https://aka.ms/yaml
 
 trigger:
-  branches:
-    include:
-      - main
+- main
 
 parameters:
-  - name: sourceDB
-    type: string
-    default: 'sourceDB'
-  - name: targetDB
-    type: string
-    default: 'targetDB'
+- name: sourceDB
+  type: string
+  default: 'sourcedb'
+- name: targetDB
+  type: string
+  default: 'targetdb'
 
 jobs:
 - job: CopyDatabase
   displayName: 'Copy Database from Source to Target'
   pool: azrelease
   steps:
-  - task: AzureCLI@2
-    displayName: 'Azure Login'
+  - task: Bash@3
     inputs:
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
+      targetType: 'inline'
+      script: |
         az login
-
-  - task: AzureCLI@2
-    inputs:
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az postgres server copy --source-db $(sourceDB) --target-db $(targetDB)
+        az postgres flexible-server connect --name dbsource --admin-user source2 --admin-password 12_BHavik
+        pg_dump -h dbsource.postgres.database.azure.com -U source2 postgres > new_backup2.dump
+        psql -h targets1.postgres.database.azure.com -U source3 -d postgres
+        psql -h targets1.postgres.database.azure.com -U source3 -d postgres -f new_backup.dump
+      workingDirectory: '$(Build.SourceDirectory)'
